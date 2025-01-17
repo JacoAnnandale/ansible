@@ -1,0 +1,25 @@
+---
+
+- hosts: all
+  tasks:
+  - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available"
+    ansible.builtin.lineinfile:
+      path: /etc/modprobe.d/CIS.conf
+      regexp: "^(#)?install hfs(\\s|$)"
+      line: "install hfs /bin/false"
+      create: true
+      mode: '644'
+
+  - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | blacklist"
+    ansible.builtin.lineinfile:
+      path: /etc/modprobe.d/blacklist.conf
+      regexp: "^(#)?blacklist hfs(\\s|$)"
+      line: "blacklist hfs"
+      create: true
+      mode: '644'
+
+  - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | Disable cramfs"
+    community.general.modprobe:
+      name: hfs
+      state: absent
+
